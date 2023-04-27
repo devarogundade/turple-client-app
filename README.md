@@ -1,7 +1,6 @@
-# frontend
+# Turple client side application
 
-This template should help get you started developing with Vue 3 in Vite.
-<img width="920" alt="turple arch" src="https://user-images.githubusercontent.com/81397790/233853509-82e4137b-819c-4d59-8998-47ff5353fa5b.png">
+Learn more about this project on [devpost](https://devpost.com/software/turple)
 
 ## Recommended IDE Setup
 
