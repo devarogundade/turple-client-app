@@ -1,7 +1,10 @@
-# frontend
+# Turple client side application
 
-This template should help get you started developing with Vue 3 in Vite.
-<img width="920" alt="turple arch" src="https://user-images.githubusercontent.com/81397790/233853509-82e4137b-819c-4d59-8998-47ff5353fa5b.png">
+Turple is a fully decentralized ads network built on the Theta Network technologies which helps advertisers to create and launch their video ad campaigns, while publishers can use them to monetize their dApps by displaying ads.
+
+Turple unlocks an attractive option for advertisers and publishers who want to have more control over their advertising campaigns and earn more revenue without the need for intermediaries.
+
+Learn more about this project on [Devpost](https://devpost.com/software/turple)
 
 ## Recommended IDE Setup
 
