@@ -108,4 +108,11 @@ import IconBlockchain from '../icons/IconBlockchain.vue';
     line-height: 24px;
     color: var(--textdimmed);
 }
+
+@media screen and (max-width: 700px) {
+    .title {
+        font-size: 30px;
+    }
+
+}
 </style>

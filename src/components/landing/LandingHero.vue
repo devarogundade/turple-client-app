@@ -56,6 +56,7 @@ section {
     background: url('/images/hero_bg.svg');
     background-repeat: no-repeat;
     background-position: center center;
+    overflow-x: hidden;
 }
 
 .hero {
@@ -66,6 +67,7 @@ section {
 }
 
 .box {
+    max-width: 100%;
     width: 600px;
     height: 80px;
     gap: 20px;
@@ -88,6 +90,7 @@ section {
 }
 
 .text {
+    max-width: 100%;
     margin-top: 50px;
     text-align: center;
     display: flex;
@@ -219,5 +222,31 @@ section {
 
 .credit svg {
     mix-blend-mode: luminosity;
+}
+
+@media screen and (max-width: 700px) {
+    .box {
+    max-width: 100%;
+    height: 60px;
+
+}
+
+.box h3 {
+    font-size: 16px;
+}
+.box img {
+    height: 24px;
+}
+
+    .text h1 {
+    font-size: 30px;
+    line-height: 40px;
+}
+
+.text .desc {
+    margin-top: 30px;
+    font-size: 14px;
+    line-height: 24px;
+}
 }
 </style>

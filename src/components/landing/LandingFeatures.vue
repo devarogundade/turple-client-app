@@ -11,7 +11,8 @@ import SVGWave from './SVGWave.vue';
     <section class="main_section">
         <div class="page_width">
             <h3 class="title">Why Should You Use Turple?</h3>
-            <p class="desc">We unlocks an attractive option for advertisers and publishers who want to have more control over their advertising <br> campaigns and earn more revenue without the need for intermediaries.</p>
+            <p class="desc">We unlocks an attractive option for advertisers and publishers who want to have more control
+                over their advertising <br> campaigns and earn more revenue without the need for intermediaries.</p>
             <div class="features">
                 <div class="feature">
                     <div class="image">
@@ -19,7 +20,8 @@ import SVGWave from './SVGWave.vue';
                     </div>
                     <div class="text">
                         <h3>For advertisers who want to reduce cost</h3>
-                        <p class="feature_desc">All blockchains are unified into one simple SDK. Effortlessly develop apps on any supported blockchain with no previous blockchain experience.
+                        <p class="feature_desc">All blockchains are unified into one simple SDK. Effortlessly develop apps
+                            on any supported blockchain with no previous blockchain experience.
                             <br> <b>Code once, deploy to any blockchain.</b>
                         </p>
                         <div class="link">
@@ -35,7 +37,8 @@ import SVGWave from './SVGWave.vue';
                     </div>
                     <div class="text">
                         <h3>Integration with popular website builders</h3>
-                        <p class="feature_desc">All blockchains are unified into one simple SDK. Effortlessly develop apps on any supported blockchain with no previous blockchain experience.
+                        <p class="feature_desc">All blockchains are unified into one simple SDK. Effortlessly develop apps
+                            on any supported blockchain with no previous blockchain experience.
                             <br> <b>Code once, deploy to any blockchain.</b>
                         </p>
                         <div class="link">
@@ -52,7 +55,8 @@ import SVGWave from './SVGWave.vue';
                     <div class="text">
                         <h3>Turple token (TNT-20 Standard)</h3>
                         <p class="feature_desc">
-                            Turple token (TRP) is the only payment method on Turple, it helps provides a secure and transparent way to conduct transactions without the need for intermediaries.
+                            Turple token (TRP) is the only payment method on Turple, it helps provides a secure and
+                            transparent way to conduct transactions without the need for intermediaries.
                             <br> <b>Code once, deploy to any blockchain.</b>
                         </p>
                         <div class="link">
@@ -68,7 +72,8 @@ import SVGWave from './SVGWave.vue';
                     </div>
                     <div class="text">
                         <h3>Turple - Standard development kits</h3>
-                        <p class="feature_desc">Turple development kits a set of tools that provide developers with the ability to integrate Turple ads into their dApp.
+                        <p class="feature_desc">Turple development kits a set of tools that provide developers with the
+                            ability to integrate Turple ads into their dApp.
                             <br> <b>Code once, deploy to any blockchain.</b>
                         </p>
                         <div class="link">
@@ -88,7 +93,7 @@ import SVGWave from './SVGWave.vue';
 }
 
 .main_section {
-    background-image:  linear-gradient(to bottom, #f5f5f5, transparent, transparent);
+    background-image: linear-gradient(to bottom, #f5f5f5, transparent, transparent);
     margin-top: -80px;
     padding: 100px 0;
 }
@@ -137,13 +142,15 @@ import SVGWave from './SVGWave.vue';
     justify-content: center;
     align-items: center;
     margin-top: 60px;
-    gap: 120px  ;
+    gap: 120px;
 }
+
 .feature {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 100px;
+    max-width: 100%;
 }
 
 .feature:nth-child(even) {
@@ -193,4 +200,38 @@ import SVGWave from './SVGWave.vue';
 .link svg {
     width: 18px;
 }
-</style>
+
+@media screen and (max-width: 700px) {
+
+    .wave_section {
+        margin-top: 60px;
+    }
+
+    .title {
+        font-size: 30px;
+    }
+
+    .desc {
+        font-size: 14px;
+        line-height: 24px;
+    }
+
+    .features {
+
+        gap: 80px;
+    }
+
+    .feature {
+        gap: 20px;
+    }
+
+    .feature .text h3 {
+        font-size: 30px;
+        line-height: 35px;
+    }
+
+    .text .feature_desc {
+        font-size: 14px;
+        line-height: 24px;
+    }
+}</style>

@@ -160,6 +160,7 @@ section {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     width: 400px;
     height: 60px;
+    max-width: 100%;
     padding: 8px;
     margin-top: 16px;
     border-radius: 40px;
@@ -271,5 +272,12 @@ section {
     background: rgba(24, 21, 70);
     color: #fff;
     font-size: 14px;
+}
+
+@media screen and (max-width: 700px) {
+    .title h3 {
+        font-size: 30px;
+    }
+
 }
 </style>

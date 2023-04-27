@@ -65,4 +65,17 @@ import PrimaryButton from '../PrimaryButton.vue'
     line-height: 30px;
     color: var(--textdimmed);
 }
+
+@media screen and (max-width: 700px) {
+    .text h3 {
+        font-size: 24px;
+    }
+
+    .text p {
+        font-size: 14ox;
+        line-height: 24px;
+        font-weight: 400;
+    }
+
+}
 </style>

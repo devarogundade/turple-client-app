@@ -82,10 +82,12 @@ main {
 
 .home-width {
     width: 1000px;
+    max-width: 90%;
 }
 
 .footer {
     display: flex;
+    flex-wrap: wrap;
     gap: 140px;
     padding-top: 160px;
     padding-bottom: 80px;
