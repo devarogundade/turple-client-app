@@ -4,7 +4,7 @@ Turple is a fully decentralized ads network built on the Theta Network technolog
 
 Turple unlocks an attractive option for advertisers and publishers who want to have more control over their advertising campaigns and earn more revenue without the need for intermediaries.
 
-Learn more about this project on [devpost](https://devpost.com/software/turple)
+Learn more about this project on [Devpost](https://devpost.com/software/turple)
 
 ## Recommended IDE Setup
 
