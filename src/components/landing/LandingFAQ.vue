@@ -29,18 +29,18 @@ export default {
         return {
             show: -1,
             faqs: [{
-                question: 'When can I buy Lucky Cats tokens?',
-                answer: 'You will be able to buy Lucky Cats when listed on Pancakeswap.'
+                question: 'When can I buy Turple tokens?',
+                answer: 'TBA.'
             },
             {
-                question: 'Where can I buy Lucky Cats token?',
-                answer: 'You can buy Lucky Cats at a cheap rate now on Private sale.'
+                question: 'Where can I buy Turple tokens?',
+                answer: 'TBA.'
             }, {
-                question: 'What is the contract address?',
-                answer: 'Contract address is 0x683bbaa70fd8e2cf62617e48b100a7609ee48946.'
+                question: 'What is Turple?',
+                answer: 'TBA.'
             }, {
-                question: 'What slippage should I use?',
-                answer: 'We recommend going with 5% slippage, the slippage tax deduction will feed our jackpot pools and our liquidity.'
+                question: 'How do I become a validator?',
+                answer: 'TBA.'
             }
             ]
         }
@@ -164,7 +164,7 @@ export default {
 }
 
 .show .handle div {
-    background: #F3CB34;
+    background: #FFC752;
 }
 
 @media screen and (max-width: 700px) {
