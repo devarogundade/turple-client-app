@@ -16,7 +16,7 @@ import SVGWave from './SVGWave.vue';
             <div class="features">
                 <div class="feature">
                     <div class="image">
-                        <img src="/images/sdk.png" alt="">
+                        <img src="/images/advertiser2.png" alt="">
                     </div>
                     <div class="text">
                         <h3>For advertisers who want to reduce cost</h3>
@@ -33,7 +33,7 @@ import SVGWave from './SVGWave.vue';
 
                 <div class="feature">
                     <div class="image">
-                        <img src="/images/defi-apps.png" alt="">
+                        <img src="/images/integrate.png" alt="">
                     </div>
                     <div class="text">
                         <h3>Integration with popular website builders</h3>
@@ -50,7 +50,7 @@ import SVGWave from './SVGWave.vue';
 
                 <div class="feature">
                     <div class="image">
-                        <img src="/images/enterprise.png" alt="">
+                        <img src="/images/token.png" alt="">
                     </div>
                     <div class="text">
                         <h3>Turple token (TNT-20 Standard)</h3>
@@ -158,7 +158,7 @@ import SVGWave from './SVGWave.vue';
 }
 
 .feature .image {
-    width: 550px;
+    width: 350px;
     max-width: 100%;
 }
 
