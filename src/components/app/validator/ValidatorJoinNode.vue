@@ -14,7 +14,7 @@
                     <p>Stake 1500 $TRP to become a validator.</p>
                 </div>
                 <div class="actions">
-                    <PrimaryButton v-on:click="joinNode()" :progress="joining" v-if="Number($fromWei(allowance)) >= 1500"
+                    <PrimaryButton v-on:click="joinNode()" :progress="joining" v-if="Number($fromWei(allowance)) >= 10500"
                         :text="'Join Node'" />
                     <PrimaryButton v-on:click="approve()" :progress="approving" v-else :text="'Enable $TRP'" />
                 </div>
@@ -62,7 +62,7 @@ export default {
             if (trx && trx.transactionHash) {
                 messages.insertMessage({
                     title: 'Joined Validator Node',
-                    description: 'You\'ve successfully staked 1,500 TRP',
+                    description: 'You\'ve successfully staked 10,500 TRP',
                     type: 'success',
                     linkTitle: 'View Trx',
                     linkUrl: `https://testnet-explorer.thetatoken.org/txs/${trx.transactionHash}`

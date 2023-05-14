@@ -12,8 +12,10 @@
                 </div>
 
                 <div class="actions">
-                    <PrimaryButton v-on:click="mintTokens()" :text="'Mint free $TRP'" :width="'200px'" :progress="minting" />
-                    <PrimaryButton v-on:click="addToken()" :text="'Add $TRP to wallet'" :width="'240px'" :progress="adding" />
+                    <PrimaryButton v-on:click="mintTokens()" :text="'Mint free $TRP'" :width="'200px'"
+                        :progress="minting" />
+                    <PrimaryButton v-on:click="addToken()" :text="'Add $TRP to wallet'" :width="'240px'"
+                        :progress="adding" />
                 </div>
             </div>
         </div>
@@ -25,6 +27,7 @@ import PrimaryButton from '../PrimaryButton.vue';
 </script>
 
 <script>
+import config from '../../assets/config.json'
 import { messages } from '../reactives/messages';
 import Approval from '../../scripts/Approval'
 export default {
@@ -35,12 +38,12 @@ export default {
         }
     },
     methods: {
-        addToken: async function() {
+        addToken: async function () {
             if (this.adding) return
 
             this.adding = true
 
-            const result = await Approval.addToken() 
+            const result = await Approval.addToken(config.tokenAddress)
 
             if (result) {
                 messages.insertMessage({
@@ -59,12 +62,15 @@ export default {
             this.adding = false
         },
 
-        mintTokens: async function() {
+        mintTokens: async function () {
             if (this.minting) return
 
             this.minting = true
 
-            const trx = await Approval.mintTokens()
+            const trx = await Approval.mintTokens(
+                config.tokenAddress,
+                this.$toWei('20000')
+            )
 
             if (trx && trx.transactionHash) {
                 messages.insertMessage({

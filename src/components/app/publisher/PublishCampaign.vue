@@ -155,7 +155,8 @@ export default {
             appName: '',
             appFormat: 0,
             appCategory: 0,
-            terms: false
+            terms: false,
+            creating: false
         }
     },
     methods: {

@@ -42,21 +42,6 @@ const ThetaVideoAPI = {
 
     transcodeVideo: async function () {
 
-    },
-
-    listVideo: async function() {
-        try {
-            const response = await axios.get(`${this.BASE_URL}/video/${THETA_KEY}/list`, {
-                headers: {
-                    'x-tva-sa-id': THETA_KEY,
-                    'x-tva-sa-secret': THETA_SECRET
-                }
-            })
-            return response.data
-        } catch (error) {
-            console.error(error);
-            return null
-        }
     }
 }
 

@@ -43,7 +43,7 @@ p {
 
 .disable {
     cursor: not-allowed;
-    background: var(--primarydimmed);
+    background: #a0a0a0;
 }
 
 .disable:hover {
@@ -55,7 +55,7 @@ p {
 }
 
 .disable p {
-    color: var(--textdimmed);
+    color: #636363;
 }
 
 .progress {

@@ -111,6 +111,20 @@ const TurpleCoreAPI = {
         }
     },
 
+    proposalState: async function (adId) {
+        try {
+            return await readContract({
+                address: this.address,
+                abi: TurpleCoreABI.abi,
+                functionName: 'state',
+                args: [adId]
+            })
+        } catch (error) {
+            console.error(error);
+            return null
+        }
+    },
+
     // ========== Publishers Functions =========== //
 
     createApp: async function (category, format, metadata) {

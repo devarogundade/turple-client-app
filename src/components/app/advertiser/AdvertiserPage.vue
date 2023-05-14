@@ -26,26 +26,26 @@
                 </div>
 
                 <div class="campaigns">
-                    <RouterLink  v-for="video, i in videos" :key="i" :to="`/app/advertiser/ads/${video.adId}`">
+                    <RouterLink v-for="video, i in videos" :key="i" :to="`/app/advertiser/ads/${video.id}`">
                         <div class="campaign">
                             <div class="video_box">
                                 <video :src="video.sources"></video>
                                 <IconVideoCircle class="play_btn" />
                             </div>
                             <div class="details">
-                                <h3 class="title">{{ video.title }}</h3>
-                                <p class="description">{{ video.description }}</p>
+                                <h3 class="title">{{ JSON.parse(video.metadata).name }}</h3>
+                                <p class="description">{{ JSON.parse(video.metadata).description }}</p>
                             </div>
                             <div class="details2">
                                 <div>
                                     <p>Votes</p>
-                                    <p>21</p>
+                                    <p>{{ video.approves.length + video.disapproves.length }}</p>
                                 </div>
                                 <div>
                                     <p>Balance</p>
                                     <div class="token">
-                                        <img src="" alt="">
-                                        <p>{{ video.balance }} TRP</p>
+                                        <img src="/images/icon.png" alt="">
+                                        <p>{{ $toMoney($fromWei(video.balance)) }} TRP</p>
                                     </div>
                                 </div>
                             </div>
@@ -80,6 +80,7 @@ export default {
     data() {
         return {
             videos: [],
+            votes: [],
             advertiser: null,
             fetching: false
         };
@@ -284,7 +285,11 @@ export default {
 .campaign .token {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+}
+
+.token img {
+    height: 22px;
 }
 
 .campaign .vote {

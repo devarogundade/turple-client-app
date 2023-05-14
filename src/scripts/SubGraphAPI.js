@@ -20,11 +20,55 @@ const SubGraphAPI = {
                             metadata
                             category
                             format
+                            approves {
+                                id
+                                validator
+                            }
+                            disapproves {
+                                id
+                                validator
+                            }
+                            status
                         }
                     }`
                 }
             )
             return response.data.data.adCreateds
+        } catch (error) {
+            console.error(error);
+            return null
+        }
+    },
+
+    ad: async function (id) {
+        try {
+            const response = await axios.post(this.BASE_URL,
+                {
+                    query: `{
+                        adCreated (id: "${id}") {
+                            id
+                            adId
+                            advertiser
+                            createdOn
+                            balance
+                            state
+                            metadata
+                            category
+                            format
+                            approves {
+                                id
+                                validator
+                            }
+                            disapproves {
+                                id
+                                validator
+                            }
+                            status
+                        }
+                    }`
+                }
+            )
+            return response.data.data.adCreated
         } catch (error) {
             console.error(error);
             return null
@@ -58,13 +102,14 @@ const SubGraphAPI = {
         }
     },
 
-    approves: async function (adId) {
+    hasApprove: async function (adId, userAddress) {
         try {
             const response = await axios.post(this.BASE_URL,
                 {
                     query: `{
                         proposalApproveds(where: {
-                            adId: ${adId}
+                            adId: ${adId},
+                            validator: ${userAddress}
                         }, orderBy: blockTimestamp) {
                             id
                             adId

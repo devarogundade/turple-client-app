@@ -8,13 +8,8 @@
                 <div class="panels">
                     <div class="panel">
                         <IconGalleryTick />
-                        <h3>1,943,432</h3>
+                        <h3>{{ videos.length }}</h3>
                         <p>Campaigns</p>
-                    </div>
-                    <div class="panel">
-                        <IconGalleryEdit />
-                        <h3>1,562</h3>
-                        <p>Ongoing validation</p>
                     </div>
                     <div class="panel">
                         <IconStake />
@@ -25,6 +20,11 @@
                         <IconCost />
                         <h3>{{ $toMoney($fromWei(validator.claimedReward)) }} <span>TRP</span></h3>
                         <p>Claimed Earnings</p>
+                    </div>
+                    <div class="panel">
+                        <IconCost />
+                        <h3>{{ $toMoney($fromWei(validator.unClaimedReward)) }} <span>TRP</span></h3>
+                        <p>UnClaimed Earnings</p>
                     </div>
                 </div>
 
@@ -37,33 +37,35 @@
                 </div>
 
                 <div class="campaigns">
-                    <div class="campaign" v-for="video, i in videos" :key="i">
-                        <div class="video_box">
-                            <video :src="video.sources[0]"></video>
-                            <IconVideoCircle class="play_btn" />
-                        </div>
-                        <div class="details">
-                            <h3 class="title">{{ video.title }}</h3>
-                            <p class="description">{{ video.description }}</p>
-                        </div>
-                        <div class="details2">
-                            <div>
-                                <p>Votes</p>
-                                <p>21</p>
+                        <div class="campaign"  v-for="video, i in videos" :key="i" >
+                            <div class="video_box">
+                                <video :src="video.sources"></video>
+                                <IconVideoCircle class="play_btn" />
+                            </div>           
+                            <div class="details">
+                                <h3 class="title">{{ JSON.parse(video.metadata).name }}</h3>
+                                <p class="description">{{ JSON.parse(video.metadata).description }}</p>
                             </div>
-                            <div>
-                                <p>Reward</p>
-                                <div class="token">
-                                    <img src="" alt="">
-                                    <p>0.01 TRP</p>
+                            <div class="details2">
+                                <div>
+                                    <p>Votes</p>
+                                    <p>{{ video.approves.length + video.disapproves.length }}</p>
+                                </div>
+                                <div>
+                                    <p>Reward</p>
+                                    <div class="token">
+                                        <img src="/images/icon.png" alt="">
+                                        <p>0.01 TRP</p>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="vote" v-if="canVote(video)">
+                                <PrimaryButton v-on:click="voteDown(video.adId)" :progress="votingDown == video.adId" :text="'Down vote'" />
+                            </div>
+                            <div class="vote2" v-else>
+                                <PrimaryButton :state="'disable'" :text="'Voted'" />
+                            </div>
                         </div>
-                        <div class="vote">
-                            <PrimaryButton :text="'Up vote'" />
-                            <PrimaryButton :text="'Down vote'" />
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -82,65 +84,118 @@ import ProgressBox from '../../ProgressBox.vue';
 </script>
 
 <script>
+import { messages } from '../../reactives/messages';
 import TurpleCoreAPI from '../../../scripts/TurpleCoreAPI'
+import SubGraphAPI from '../../../scripts/SubGraphAPI';
 export default {
     props: ['userAddress'],
     data() {
         return {
-            videos: [
-                {
-                    "description": "Big Buck Bunny tells the story of a giant rabbit with a heart bigger than himself. When one sunny day three rodents rudely harass him, something snaps... and the rabbit ain't no bunny anymore! In the typical cartoon tradition he prepares the nasty rodents a comical revenge.\n\nLicensed under the Creative Commons Attribution license\nhttp://www.bigbuckbunny.org",
-                    "sources": ["http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"],
-                    "subtitle": "By Blender Foundation",
-                    "thumb": "images/BigBuckBunny.jpg",
-                    "title": "Big Buck Bunny"
-                },
-                {
-                    "description": "The first Blender Open Movie from 2006",
-                    "sources": ["http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"],
-                    "subtitle": "By Blender Foundation",
-                    "thumb": "images/ElephantsDream.jpg",
-                    "title": "Elephant Dream"
-                },
-                {
-                    "description": "Smoking Tire takes the all-new Subaru Outback to the highest point we can find in hopes our customer-appreciation Balloon Launch will get some free T-shirts into the hands of our viewers.",
-                    "sources": ["http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4"],
-                    "subtitle": "By Garage419",
-                    "thumb": "images/SubaruOutbackOnStreetAndDirt.jpg",
-                    "title": "Subaru Outback On Street And Dirt"
-                },
-                {
-                    "description": "The Smoking Tire meets up with Chris and Jorge from CarsForAGrand.com to see just how far $1,000 can go when looking for a car.The Smoking Tire meets up with Chris and Jorge from CarsForAGrand.com to see just how far $1,000 can go when looking for a car.",
-                    "sources": ["http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4"],
-                    "subtitle": "By Garage419",
-                    "thumb": "images/WhatCarCanYouGetForAGrand.jpg",
-                    "title": "What care can you get for a grand?"
-                }
-            ],
+            videos: [],
             validator: null,
-            fetching: true
+            fetching: true,
+            votingUp: -1,
+            votingDown: -1
         };
     },
     watch: {
         userAddress: function () {
+            this.getAds()
             this.getValidatorProfile()
         }
     },
     mounted() {
+        this.getAds()
         this.getValidatorProfile()
     },
     methods: {
+        getAds: async function () {
+            if (this.userAddress) {
+                this.videos = await SubGraphAPI.ads(this.userAddress)
+            } else {
+                this.videos = []
+            }
+        },
+
         getValidatorProfile: async function () {
             if (this.userAddress) {
                 this.fetching = true
                 this.validator = await TurpleCoreAPI.validator(this.userAddress)
-
+     
                 if (this.validator && Number(this.validator.createdOn) == 0) {
                     this.$router.push('/app/validator/join')
                 }
 
                 this.fetching = false
             }
+        },
+
+        canVote: function (ad) {
+            for (let index = 0; index < ad.approves.length; index++) {
+                if (ad.approves[index].validator.toLowerCase() == this.userAddress.toLowerCase()) {
+                    return false
+                }               
+            }
+
+            for (let index = 0; index < ad.disapproves.length; index++) {
+                if (ad.disapproves[index].validator.toLowerCase() == this.userAddress.toLowerCase()) {
+                    return false
+                }               
+            }
+
+            return true
+        },
+        
+        voteUp: async function (adId) {
+            if (this.votingUp > 0) return
+
+            this.votingUp = adId
+
+            const trx = await TurpleCoreAPI.voteAdUp(adId)
+
+            if (trx && trx.transactionHash) {
+                messages.insertMessage({
+                    title: 'Ad campaign has been voted up',
+                    description: 'You\'ve successfully vote this ad up',
+                    type: 'success',
+                    linkTitle: 'View Trx',
+                    linkUrl: `https://testnet-explorer.thetatoken.org/txs/${trx.transactionHash}`
+                })
+            } else {
+                messages.insertMessage({
+                    title: 'Failed to vote ad campaign up',
+                    description: 'Please try transaction again',
+                    type: 'failed'
+                })
+            }
+
+            this.votingUp = -1
+        },
+
+        voteDown: async function (adId) {
+            if (this.votingDown > 0) return
+
+            this.votingDown = adId
+
+            const trx = await TurpleCoreAPI.voteAdDown(adId)
+
+            if (trx && trx.transactionHash) {
+                messages.insertMessage({
+                    title: 'Ad campaign has been voted down',
+                    description: 'You\'ve successfully vote this ad down',
+                    type: 'success',
+                    linkTitle: 'View Trx',
+                    linkUrl: `https://testnet-explorer.thetatoken.org/txs/${trx.transactionHash}`
+                })
+            } else {
+                messages.insertMessage({
+                    title: 'Failed to vote ad campaign down',
+                    description: 'Please try transaction again',
+                    type: 'failed'
+                })
+            }
+
+            this.votingDown = -1
         }
     },
     components: { IconCost, ProgressBox }
@@ -255,6 +310,7 @@ export default {
     background: #F5F5F5;
     border: 1px #e4e4e4 solid;
     border-radius: 10px;
+    color: var(--textdimmed);
     overflow: hidden;
 }
 
@@ -323,12 +379,23 @@ export default {
     gap: 10px;
 }
 
+.token img {
+    height: 22px;
+}
+
+
 .campaign .vote {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     padding: 20px;
     gap: 20px;
 }
+
+.campaign .vote2 {
+    padding: 20px;
+    gap: 20px;
+}
+
 
 .campaign .vote>div {
     display: flex;

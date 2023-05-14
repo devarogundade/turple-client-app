@@ -1,8 +1,5 @@
-
-
-
 <template>
-    <section>
+    <section v-if="ad">
         <div class="page_width">
             <main>
                 <div class="title">
@@ -15,62 +12,58 @@
                                 <p>Campaigns</p>
                             </RouterLink>
                             <p>/</p>
-                            <p>Campaign name</p>
+                            <p>{{ JSON.parse(ad.metadata).name }}</p>
                         </div>
 
-                        <PrimaryButton v-on:click="createCampaign()" :width="'200px'" :text="'Publish'" />
+                        <div class="actions">
+                            <PrimaryButton v-if="ad.state == 3" v-on:click="resumeAd()" :progress="resuming"
+                                :width="'200px'" :text="'Resume'" />
+                            <PrimaryButton v-if="ad.state == 0" v-on:click="proposeAd()" :progress="proposing"
+                                :width="'200px'" :text="'Propose'" />
+                            <PrimaryButton v-if="ad.state == 1 && adStatus == 0" :state="'disable'" :width="'200px'"
+                                :text="'Wait for validators'" />
+                            <PrimaryButton v-if="ad.state == 1 && adStatus == 1" v-on:click="publishAd()"
+                                :progress="publishing" :width="'200px'" :text="'Publish'" />
+                        </div>
                     </div>
                 </div>
 
                 <div class="form_parent">
+                    <div class="balance">
+                        <h3>Balance</h3>
+                        <div class="fund">
+                            <p>{{ $toMoney($fromWei(ad.balance)) }} <span>$TRP</span></p>
+                            <PrimaryButton :text="'Fund'" v-on:click="fundAd()" v-if="Number($fromWei(allowance)) >= 100"
+                                :progress="funding" :width="'100px'" />
+                            <PrimaryButton v-on:click="approve()" :progress="approving" v-else :text="'Enable $TRP'" />
+                        </div>
+                    </div>
                     <div class="form">
                         <div class="input">
-                            <label for="">Campaign name *</label>
-                            <input type="text" v-model="campaignName" placeholder="E.g my game campaign">
-                        </div>
-                        <br> <br>
-                        <div class="input">
-                            <label for="">Campaign format *</label>
+                            <label for="">Campaign format</label>
                             <div class="formats">
-                                <div v-on:click="campaignFormat = 'full-mobile'"
-                                    :class="campaignFormat == 'full-mobile' ? 'selected_format format' : 'format'">
+                                <div v-if="ad.format == 0" class="selected_format format">
                                     <IconMobile />
                                     <p>Full on-mobile</p>
                                     <p>Best ideal for game mobile apps</p>
                                 </div>
 
-                                <div v-on:click="campaignFormat = 'web-video'"
-                                    :class="campaignFormat == 'web-video' ? 'selected_format format' : 'format'">
+                                <div v-if="ad.format == 1" class="selected_format format">
                                     <IconGlobal />
                                     <p>Website Video Ads</p>
                                     <p>Best ideal for game mobile apps</p>
                                 </div>
 
-                                <div v-on:click="campaignFormat = 'rewarded'"
-                                    :class="campaignFormat == 'rewarded' ? 'selected_format format' : 'format'">
+                                <div v-if="ad.format == 2" class="selected_format format">
                                     <IconGame />
                                     <p>Rewarded Ads</p>
-                                    <p>Best ideal for game mobile apps</p>
-                                </div>
-
-                                <div class="format">
-                                    <span>Soon</span>
-                                    <IconMobile2 />
-                                    <p>Virtual Reality</p>
-                                    <p>Best ideal for game mobile apps</p>
-                                </div>
-
-                                <div class="format">
-                                    <span>Soon</span>
-                                    <IconMobile2 />
-                                    <p>SmartTV Ads</p>
                                     <p>Best ideal for game mobile apps</p>
                                 </div>
                             </div>
                         </div>
                         <br> <br>
                         <div class="input">
-                            <label for="">Campaign video *</label>
+                            <label for="">Campaign video</label>
                             <div class="upload_video" v-on:click="pickFile()">
                                 <IconVideoCircle />
                                 <p>Play Video</p>
@@ -78,59 +71,59 @@
                         </div>
                         <br> <br>
                         <div class="input">
-                            <label for="">Campaign category *</label>
+                            <label for="">Campaign category</label>
                             <div class="categories">
-                                <div class="category">
+                                <div class="category" v-if="ad.category == 0">
                                     <div class="name">
                                         <IconGame />
                                         <P>Metaverse and Gaming</P>
                                     </div>
-                                    <label class="switch" v-on:click="campaignCategory = 'meta'">
-                                        <input type="checkbox" :checked="campaignCategory == 'meta'" disabled>
+                                    <label class="switch">
+                                        <input type="checkbox" :checked="true" disabled>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
 
-                                <div class="category">
+                                <div class="category" v-if="ad.category == 1">
                                     <div class="name">
                                         <IconBlockchain />
                                         <P>DeFi, DAOs and AMMs</P>
                                     </div>
-                                    <label class="switch" v-on:click="campaignCategory = 'defi'">
-                                        <input type="checkbox" :checked="campaignCategory == 'defi'" disabled>
+                                    <label class="switch">
+                                        <input type="checkbox" :checked="true" disabled>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
 
-                                <div class="category">
+                                <div class="category" v-if="ad.category == 2">
                                     <div class="name">
                                         <IconGame />
                                         <P>Artistry, NFTs, and Marketplaces</P>
                                     </div>
-                                    <label class="switch" v-on:click="campaignCategory = 'nft'">
-                                        <input type="checkbox" :checked="campaignCategory == 'nft'" disabled>
+                                    <label class="switch">
+                                        <input type="checkbox" :checked="true" disabled>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
 
-                                <div class="category">
+                                <div class="category" v-if="ad.category == 3">
                                     <div class="name">
                                         <IconGame />
                                         <P>ICO, IDO, INO, IGO and others</P>
                                     </div>
-                                    <label class="switch" v-on:click="campaignCategory = 'ico'">
-                                        <input type="checkbox" :checked="campaignCategory == 'ico'" disabled>
+                                    <label class="switch">
+                                        <input type="checkbox" :checked="true" disabled>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
 
-                                <div class="category">
+                                <div class="category" v-if="ad.category == 4">
                                     <div class="name">
                                         <IconGame />
                                         <P>Fashion Industry</P>
                                     </div>
-                                    <label class="switch" v-on:click="campaignCategory = 'fashion'">
-                                        <input type="checkbox" :checked="campaignCategory == 'fashion'" disabled>
+                                    <label class="switch">
+                                        <input type="checkbox" :checked="true" disabled>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -144,46 +137,93 @@
 </template>
 
 <script setup>
-import ThetaVideoAPI from '../../../scripts/ThetaVideoAPI'
 import PrimaryButton from '../../PrimaryButton.vue'
-import IconFolderAdd from '../../icons/IconFolderAdd.vue'
 import IconMobile from '../../icons/IconMobile.vue'
-import IconMobile2 from '../../icons/IconMobile2.vue'
 import IconGame from '../../icons/IconGame.vue'
 import IconGlobal from '../../icons/IconGlobal.vue'
 import IconBlockchain from '../../icons/IconBlockchain.vue'
 </script>
 
 <script>
-import FileUtils from '../../../scripts/FileUtils'
+// import FileUtils from '../../../scripts/FileUtils'
+import config from '../../../assets/config.json'
 import { messages } from '../../reactives/messages'
 import TurpleCoreAPI from '../../../scripts/TurpleCoreAPI'
+import SubGraphAPI from '../../../scripts/SubGraphAPI'
 import IconVideoCircle from '../../icons/IconVideoCircle.vue'
 export default {
+    props: ['userAddress'],
     data() {
         return {
-            campaignName: "",
-            campaignFormat: "full-mobile",
-            campaignCategory: "meta"
+            ad: null,
+            resuming: false,
+            funding: false,
+            publishing: false,
+            proposing: false,
+            approving: false,
+            allowance: '0',
+            adStatus: 0
         };
     },
+    watch: {
+        userAddress: function () {
+            this.getAllowance()
+        }
+    },
+    mounted() {
+        this.getAd()
+        this.getAdStatus()
+        this.getAllowance()
+    },
     methods: {
-        createCampaign: async function () {
-            if (this.campaignName == "") {
-                messages.insertMessage({
-                    title: "Enter campaign name",
-                    description: "Campaign name is required",
-                    type: "failed"
-                });
-                return;
-            }
+        getAllowance: async function () {
+            if (this.userAddress) {
+                const amount = await this.$allowanceOf(
+                    this.userAddress,
+                    config.tokenAddress,
+                    TurpleCoreAPI.address
+                )
 
-            const trx = await TurpleCoreAPI.createCampaign(this.campaignCategory, this.campaignFormat);
+                this.allowance = amount.toString()
+            }
+        },
+
+        getAdStatus: async function () {
+            this.adStatus = await TurpleCoreAPI.proposalState(this.$route.params.id)
+            console.log(this.adStatus);
+        },
+
+        approve: async function () {
+            if (this.approving) return
+
+            this.approving = true
+
+            await this.$approve(
+                config.tokenAddress,
+                TurpleCoreAPI.address
+            )
+
+            this.approving = false
+            this.getAllowance()
+        },
+
+        getAd: async function () {
+            this.ad = await SubGraphAPI.ad(this.$route.params.id)
+        },
+
+        proposeAd: async function () {
+            if (this.proposing) return
+
+            this.proposing = true
+
+            const trx = await TurpleCoreAPI.proposeAd(this.ad.adId);
+
+            this.getAd()
 
             if (trx && trx.transactionHash) {
                 messages.insertMessage({
-                    title: "Campaign has been created",
-                    description: "You've successfully create a campaign",
+                    title: "Ad campaign has been proposed",
+                    description: "Your ad will be approve or disapproved by validators",
                     type: "success",
                     linkTitle: "View Trx",
                     linkUrl: `https://testnet-explorer.thetatoken.org/txs/${trx.transactionHash}`
@@ -196,6 +236,62 @@ export default {
                     type: "failed"
                 });
             }
+
+            this.proposing = false
+        },
+
+        fundAd: async function () {
+            if (this.funding) return
+
+            this.funding = true
+
+            const trx = await TurpleCoreAPI.fundAd(this.ad.adId, this.$toWei('100'))
+
+            if (trx && trx.transactionHash) {
+                messages.insertMessage({
+                    title: "Ad campaign has been proposed",
+                    description: "Your ad will be approve or disapproved by validators",
+                    type: "success",
+                    linkTitle: "View Trx",
+                    linkUrl: `https://testnet-explorer.thetatoken.org/txs/${trx.transactionHash}`
+                });
+            }
+            else {
+                messages.insertMessage({
+                    title: "Failed to create campaign",
+                    description: "Please try transaction again",
+                    type: "failed"
+                });
+            }
+
+            this.funding = false
+        },
+
+        publishAd: async function () {
+            if (this.publishing) return
+
+            this.publishing = true
+
+            const trx = await TurpleCoreAPI.publishAd(this.ad.adId)
+
+            if (trx && trx.transactionHash) {
+                messages.insertMessage({
+                    title: "Ad campaign has been published",
+                    description: "Your ad has been successfully published",
+                    type: "success",
+                    linkTitle: "View Trx",
+                    linkUrl: `https://testnet-explorer.thetatoken.org/txs/${trx.transactionHash}`
+                });
+            }
+            else {
+                messages.insertMessage({
+                    title: "Failed to publish campaign",
+                    description: "Please try transaction again",
+                    type: "failed"
+                });
+            }
+
+            this.publishing = false
         }
     },
     components: { IconVideoCircle }
@@ -235,6 +331,12 @@ main {
     justify-content: space-between;
 }
 
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
 .links {
     display: flex;
     align-items: center;
@@ -247,8 +349,36 @@ main {
 
 .form_parent {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     margin-top: 40px;
+}
+
+.balance {
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.balance h3 {
+    font-size: 30px;
+    font-weight: 500;
+}
+
+.balance .fund {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.balance .fund p {
+    font-size: 45px;
+    color: var(--primary);
+}
+
+.balance .fund span {
+    font-size: 20px;
+    color: var(--textdimmed);
+    font-weight: 600;
 }
 
 .form {
@@ -401,4 +531,5 @@ main {
 
 .terms p a {
     text-decoration: underline 1px var(--primary);
-}</style>
+}
+</style>

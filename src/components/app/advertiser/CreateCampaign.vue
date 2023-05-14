@@ -28,6 +28,11 @@
                         </div>
                         <br> <br>
                         <div class="input">
+                            <label for="">Campaign link</label>
+                            <input type="text" v-model="adLink" placeholder="https://">
+                        </div>
+                        <br> <br>
+                        <div class="input">
                             <label for="">Campaign format *</label>
                             <div class="formats">
                                 <div v-on:click="adFormat = 0"
@@ -159,7 +164,6 @@ import IconBlockchain from '../../icons/IconBlockchain.vue'
 </script>
 
 <script>
-import FileUtils from '../../../scripts/FileUtils'
 import { messages } from '../../reactives/messages'
 import TurpleCoreAPI from '../../../scripts/TurpleCoreAPI'
 export default {
@@ -167,6 +171,7 @@ export default {
         return {
             videoFile: null,
             adName: '',
+            adLink: '',
             adFormat: 0,
             adCategory: 0,
             terms: false,
@@ -206,14 +211,13 @@ export default {
 
             this.creating = true
 
-            const fileContents = await FileUtils.toBase64(this.videoFile)
-
-            const upload = await ThetaVideoAPI.createAndUploadVideo(fileContents)
+            const upload = await ThetaVideoAPI.createAndUploadVideo(this.videoFile)
 
             console.log(upload);
 
             const metadata = {
                 name: this.adName,
+                link: this.adLink,
                 description: null,
                 playback_url: null
             }

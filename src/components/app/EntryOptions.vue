@@ -7,7 +7,7 @@
                 </div>
                 <div class="options">
                     <div class="option">
-                        <img src="/images/defi-apps.png" alt="">
+                        <img src="/images/advertiser.png" alt="">
                         <div class="details">
                             <p>Advertiser</p>
                             <p>Launch a campaign</p>
@@ -20,7 +20,7 @@
                     </div>
 
                     <div class="option">
-                        <img src="/images/defi-apps.png" alt="">
+                        <img src="/images/publisher.png" alt="">
                         <div class="details">
                             <p>Publisher</p>
                             <p>Monetize your creation</p>
@@ -33,7 +33,7 @@
                     </div>
 
                     <div class="option">
-                        <img src="/images/defi-apps.png" alt="">
+                        <img src="/images/validator.png" alt="">
                         <div class="details">
                             <p>Validator</p>
                             <p>Start earnings in $TRP</p>
@@ -99,6 +99,7 @@ main {
 
 .option img {
     height: 260px;
+    margin-top: 40px;
 }
 
 .options .details {

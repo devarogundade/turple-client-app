@@ -1,5 +1,7 @@
 import { readContract, prepareWriteContract, writeContract, waitForTransaction, erc20ABI } from '@wagmi/core'
 
+import TurpleTokenABI from '../contracts/TurpleToken.json'
+
 const Approval = {
     balanceOf: async function (userAddress, tokenAddress) {
         try {
@@ -49,12 +51,13 @@ const Approval = {
         }
     },
 
-    mintTokens: async function (tokenAddress) {
+    mintTokens: async function (tokenAddress, amount) {
         try {
             const config = await prepareWriteContract({
                 address: tokenAddress,
-                abi: erc20ABI,
-                functionName: 'mint'
+                abi: TurpleTokenABI.abi,
+                functionName: 'mintFaucet',
+                args: [amount]
             })
 
             const { hash } = await writeContract(config)
@@ -68,8 +71,26 @@ const Approval = {
         }
     },
 
-    addToken: async function () {
-        
+    addToken: async function (tokenAddress) {
+        try {
+            // eslint-disable-next-line no-undef
+            await ethereum.request({
+                method: 'wallet_watchAsset',
+                params: {
+                    type: 'ERC20',
+                    options: {
+                        address: tokenAddress,
+                        symbol: 'TRP',
+                        decimals: '18',
+                        image: 'https://turple.netlify.app/images/icon.png',
+                    },
+                },
+            });
+            return true
+        } catch (error) {
+            console.error(error);
+            return false
+        }
     }
 }
 
