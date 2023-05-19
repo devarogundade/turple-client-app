@@ -1,21 +1,24 @@
 <template>
-    <section>
+    <div class="progress" v-if="!app || !extApp">
+        <ProgressBox />
+    </div>
+    <section v-else>
         <div class="page_width">
             <div class="validator">
                 <div class="panels">
                     <div class="panel">
                         <IconStake />
-                        <h3>1,500</h3>
+                        <h3>{{ extApp.views }}</h3>
                         <p>Total Views</p>
                     </div>
                     <div class="panel">
                         <IconCost />
-                        <h3>130</h3>
+                        <h3>{{ extApp.clicks }}</h3>
                         <p>Total Clicks</p>
                     </div>
                     <div class="panel">
                         <IconCost />
-                        <h3>1.523 <span>TRP</span></h3>
+                        <h3>{{ $toMoney($fromWei(app.balance) - $fromWei(extApp.earned)) }} <span>TRP</span></h3>
                         <p>Unclaimed Earnings</p>
                     </div>
                 </div>
@@ -38,9 +41,12 @@
 
                     <div class="steps">
                         <div class="step">npm install @turple/vue</div>
-                        <div class="step">> .env <br> PUB_ID=xxxxxxxxxxxxxxxx</div>
-                        <div class="step">> main.js <br> import Turple from 'turple' <br> app.use(Turple)</div>
-                        <!-- <div class="step">> component <br> <Turple :pub-id="PUB_ID" :options="options" /> </div> -->
+                        <div class="step">> .env <br> PUB_ID=pubid_{{ $route.params.id }}</div>
+                        <div class="step">> main.js <br> import Adview from '@turple/vue' <br> app.use(Adview)</div>
+                    </div>
+
+                    <div class="steps">
+                        <div class="step">> Component.vue <br> </div>
                     </div>
                 </div>
             </div>
@@ -55,8 +61,49 @@ import PrimaryButton from '../../PrimaryButton.vue';
 </script>
 
 
+<script>
+import axios from 'axios';
+import SubGraphAPI from '../../../scripts/SubGraphAPI';
+import ProgressBox from '../../ProgressBox.vue';
+export default {
+    data() {
+        return {
+            app: null,
+            extApp: null
+        };
+    },
+    mounted() {
+        this.getApp();
+        this.tryInitApp();
+    },
+    methods: {
+        getApp: async function () {
+            this.app = await SubGraphAPI.ad(this.$route.params.id);
+        },
+        tryInitApp: function () {
+            axios.post(`https://turple-api-v1.onrender.com/app/create?appid=${this.$route.params.id}`);
+            this.tryGetApp();
+        },
+        tryGetApp: function () {
+            axios.get(`https://turple-api-v1.onrender.com/app/${this.$route.params.id}`)
+                .then(response => {
+                this.extApp = response.data.data;
+            });
+        }
+    },
+    components: { ProgressBox }
+}
+</script>
 
 <style scoped>
+
+.progress {
+    transition: .2s;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .validator {
     padding: 120px 0;
 }
