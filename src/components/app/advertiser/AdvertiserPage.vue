@@ -26,11 +26,18 @@
                 </div>
 
                 <div class="campaigns">
-                    <RouterLink v-for="video, i in videos" :key="i" :to="`/app/advertiser/ads/${video.id}`">
+                    <div v-for="video, i in videos" :key="i">
                         <div class="campaign">
                             <div class="video_box">
-                                <video :src="video.sources"></video>
-                                <IconVideoCircle class="play_btn" />
+                                <VideoPlayer :options="{
+                                    autoplay: false,
+                                    controls: true,
+                                    sources: [{
+                                        src: `https://media.thetavideoapi.com/${JSON.parse(video.metadata).videoId}/master.m3u8`,
+                                        type: 'application/x-mpegurl'
+                                    }]
+                                }" />
+                                <!-- <IconVideoCircle class="play_btn" /> -->
                             </div>
                             <div class="details">
                                 <h3 class="title">{{ JSON.parse(video.metadata).name }}</h3>
@@ -49,11 +56,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="vote">
-                                <PrimaryButton :text="'Manage'" />
-                            </div>
+                            <RouterLink  :to="`/app/advertiser/ads/${video.id}`">
+                                <div class="vote">
+                                    <PrimaryButton :text="'Manage'" />
+                                </div>
+                            </RouterLink>
                         </div>
-                    </RouterLink>
+                    </div>
                 </div>
 
                 <div class="t_empty" v-if="videos.length == 0">
@@ -69,8 +78,9 @@
 import IconCost from '../../icons/IconCost.vue';
 import IconGalleryTick from '../../icons/IconGalleryTick.vue'
 import PrimaryButton from '../../PrimaryButton.vue';
-import IconVideoCircle from '../../icons/IconVideoCircle.vue';
+// import IconVideoCircle from '../../icons/IconVideoCircle.vue';
 import ProgressBox from '../../ProgressBox.vue';
+import VideoPlayer from '../../VideoPlayer.vue'
 </script>
 
 <script>

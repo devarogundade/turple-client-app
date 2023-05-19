@@ -10,8 +10,8 @@
                     </div>
                     <div class="panel">
                         <IconCost />
-                        <h3>1.523 <span>TRP</span></h3>
-                        <p>Claimed Earnings</p>
+                        <h3>130</h3>
+                        <p>Total Clicks</p>
                     </div>
                     <div class="panel">
                         <IconCost />

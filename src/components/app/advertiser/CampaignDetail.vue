@@ -29,13 +29,25 @@
                 </div>
 
                 <div class="form_parent">
-                    <div class="balance">
-                        <h3>Balance</h3>
-                        <div class="fund">
-                            <p>{{ $toMoney($fromWei(ad.balance)) }} <span>$TRP</span></p>
-                            <PrimaryButton :text="'Fund'" v-on:click="fundAd()" v-if="Number($fromWei(allowance)) >= 100"
-                                :progress="funding" :width="'100px'" />
-                            <PrimaryButton v-on:click="approve()" :progress="approving" v-else :text="'Enable $TRP'" />
+                    <div class="toolbar">
+                        <div class="balance">
+                            <h3>Balance</h3>
+                            <div class="fund">
+                                <p>{{ $toMoney($fromWei(ad.balance)) }} <span>$TRP</span></p>
+                                <PrimaryButton :text="'Fund'" v-on:click="fundAd()"
+                                    v-if="Number($fromWei(allowance)) >= 100" :progress="funding" :width="'100px'" />
+                                <PrimaryButton v-on:click="approve()" :progress="approving" v-else
+                                    :text="'Enable $TRP to Fund'" />
+                            </div>
+                        </div>
+
+                        <div class="stats">
+                            <div class="stat">
+                                <p><span>Views:</span> 0</p>
+                            </div>
+                            <div class="stat">
+                                <p><span>Clicks:</span> 0</p>
+                            </div>
                         </div>
                     </div>
                     <div class="form">
@@ -65,8 +77,14 @@
                         <div class="input">
                             <label for="">Campaign video</label>
                             <div class="upload_video" v-on:click="pickFile()">
-                                <IconVideoCircle />
-                                <p>Play Video</p>
+                                <VideoPlayer :options="{
+                                    autoplay: false,
+                                    controls: true,
+                                    sources: [{
+                                        src: `https://media.thetavideoapi.com/${JSON.parse(ad.metadata).videoId}/master.m3u8`,
+                                        type: 'application/x-mpegurl'
+                                    }]
+                                }" />
                             </div>
                         </div>
                         <br> <br>
@@ -129,6 +147,10 @@
                                 </div>
                             </div>
                         </div>
+                        <br> <br>
+                        <a target="_blank" :href="JSON.parse(ad.metadata).link">
+                            <PrimaryButton :text="'Go to link'" />
+                        </a>
                     </div>
                 </div>
             </main>
@@ -150,7 +172,8 @@ import config from '../../../assets/config.json'
 import { messages } from '../../reactives/messages'
 import TurpleCoreAPI from '../../../scripts/TurpleCoreAPI'
 import SubGraphAPI from '../../../scripts/SubGraphAPI'
-import IconVideoCircle from '../../icons/IconVideoCircle.vue'
+// import IconVideoCircle from '../../icons/IconVideoCircle.vue'
+import VideoPlayer from '../../VideoPlayer.vue'
 export default {
     props: ['userAddress'],
     data() {
@@ -294,7 +317,7 @@ export default {
             this.publishing = false
         }
     },
-    components: { IconVideoCircle }
+    components: { VideoPlayer }
 }
 </script>
 
@@ -354,9 +377,28 @@ main {
     margin-top: 40px;
 }
 
-.balance {
-    width: 100%;
+.toolbar {
     margin-bottom: 40px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stats {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.stat p {
+    font-size: 36px;
+    font-weight: 600;
+}
+
+.stat span {
+    opacity: 0.7;
+    font-size: 24px;
 }
 
 .balance h3 {
@@ -418,7 +460,7 @@ main {
 }
 
 .format {
-    width: 240px;
+    width: 100%;
     border-style: solid;
     border-width: 1px;
     border-color: #e4e4e4;
@@ -467,7 +509,6 @@ main {
 .upload_video {
     margin-top: 10px;
     width: 100%;
-    height: 300px;
     background-color: #F5F5F5;
     text-align: center;
     border-radius: 10px;

@@ -166,6 +166,7 @@ import IconBlockchain from '../../icons/IconBlockchain.vue'
 <script>
 import { messages } from '../../reactives/messages'
 import TurpleCoreAPI from '../../../scripts/TurpleCoreAPI'
+// import FileUtils from '../../../scripts/FileUtils'
 export default {
     data() {
         return {
@@ -211,15 +212,14 @@ export default {
 
             this.creating = true
 
+            // const fileContents = await FileUtils.toBase64(this.videoFile)
             const upload = await ThetaVideoAPI.createAndUploadVideo(this.videoFile)
-
-            console.log(upload);
 
             const metadata = {
                 name: this.adName,
                 link: this.adLink,
                 description: null,
-                playback_url: null
+                videoId: upload.videos[0].id
             }
 
             const trx = await TurpleCoreAPI.createAd(
