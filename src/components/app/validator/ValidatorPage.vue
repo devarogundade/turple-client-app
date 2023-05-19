@@ -39,9 +39,16 @@
                 <div class="campaigns">
                         <div class="campaign"  v-for="video, i in videos" :key="i" >
                             <div class="video_box">
-                                <video :src="video.sources"></video>
-                                <IconVideoCircle class="play_btn" />
-                            </div>           
+                                <VideoPlayer :options="{
+                                    autoplay: false,
+                                    controls: true,
+                                    sources: [{
+                                        src: `https://media.thetavideoapi.com/${JSON.parse(video.metadata).videoId}/master.m3u8`,
+                                        type: 'application/x-mpegurl'
+                                    }]
+                                }" />
+                                <!-- <IconVideoCircle class="play_btn" /> -->
+                            </div>          
                             <div class="details">
                                 <h3 class="title">{{ JSON.parse(video.metadata).name }}</h3>
                                 <p class="description">{{ JSON.parse(video.metadata).description }}</p>
@@ -52,7 +59,7 @@
                                     <p>{{ video.approves.length + video.disapproves.length }}</p>
                                 </div>
                                 <div>
-                                    <p>Reward</p>
+                                    <p>$Reward</p>
                                     <div class="token">
                                         <img src="/images/icon.png" alt="">
                                         <p>0.01 TRP</p>
@@ -60,6 +67,7 @@
                                 </div>
                             </div>
                             <div class="vote" v-if="canVote(video)">
+                                <PrimaryButton v-on:click="voteUp(video.adId)" :progress="votingUp == video.adId" :text="'Up vote'" />
                                 <PrimaryButton v-on:click="voteDown(video.adId)" :progress="votingDown == video.adId" :text="'Down vote'" />
                             </div>
                             <div class="vote2" v-else>
@@ -76,11 +84,12 @@
 import IconPeople from '../../icons/IconPeople.vue';
 import IconCost from '../../icons/IconCost.vue';
 import IconStake from '../../icons/IconStake.vue'
-import IconGalleryEdit from '../../icons/IconGalleryEdit.vue'
+// import IconGalleryEdit from '../../icons/IconGalleryEdit.vue'
 import IconGalleryTick from '../../icons/IconGalleryTick.vue'
 import PrimaryButton from '../../PrimaryButton.vue';
-import IconVideoCircle from '../../icons/IconVideoCircle.vue';
+// import IconVideoCircle from '../../icons/IconVideoCircle.vue';
 import ProgressBox from '../../ProgressBox.vue';
+import VideoPlayer from '../../VideoPlayer.vue'
 </script>
 
 <script>
