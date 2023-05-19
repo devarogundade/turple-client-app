@@ -3,13 +3,36 @@ import axios from 'axios'
 const SubGraphAPI = {
     BASE_URL: 'http://localhost:8000/subgraphs/name/turple',
 
-    ads: async function (advertiser) {
+    ads: async function (advertiser, state = null) {
         try {
             const response = await axios.post(this.BASE_URL,
                 {
-                    query: `{
+                    query: !state ? `{
                         adCreateds(where: {
                             advertiser: "${advertiser}"
+                        }, orderBy: blockNumber) {
+                            id
+                            adId
+                            advertiser
+                            createdOn
+                            balance
+                            state
+                            metadata
+                            category
+                            format
+                            approves {
+                                id
+                                validator
+                            }
+                            disapproves {
+                                id
+                                validator
+                            }
+                            status
+                        }
+                    }` : `{
+                        adCreateds(where: {
+                            advertiser: "${advertiser}", state: ${state}
                         }, orderBy: blockNumber) {
                             id
                             adId

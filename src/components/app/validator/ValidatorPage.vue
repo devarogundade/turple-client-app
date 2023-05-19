@@ -62,7 +62,7 @@
                                     <p>$Reward</p>
                                     <div class="token">
                                         <img src="/images/icon.png" alt="">
-                                        <p>0.01 TRP</p>
+                                        <p>2.00 TRP</p>
                                     </div>
                                 </div>
                             </div>
@@ -120,7 +120,7 @@ export default {
     methods: {
         getAds: async function () {
             if (this.userAddress) {
-                this.videos = await SubGraphAPI.ads(this.userAddress)
+                this.videos = await SubGraphAPI.ads(this.userAddress, 1)
             } else {
                 this.videos = []
             }
@@ -178,6 +178,9 @@ export default {
                 })
             }
 
+            this.getAds()
+            this.getValidatorProfile()
+
             this.votingUp = -1
         },
 
@@ -203,6 +206,9 @@ export default {
                     type: 'failed'
                 })
             }
+
+            this.getAds()
+            this.getValidatorProfile()
 
             this.votingDown = -1
         }
@@ -380,6 +386,14 @@ export default {
 
 .campaign .details2>div:first-child {
     border-right: 1px solid #e4e4e4;
+}
+
+.campaign .details2 p:last-child {
+    text-align: center;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .campaign .token {

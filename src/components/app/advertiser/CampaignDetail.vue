@@ -1,5 +1,8 @@
 <template>
-    <section v-if="ad">
+    <div class="progress" v-if="!ad || !extAd" >
+        <ProgressBox />
+    </div>
+    <section v-else>
         <div class="page_width">
             <main>
                 <div class="title">
@@ -33,7 +36,7 @@
                         <div class="balance">
                             <h3>Balance</h3>
                             <div class="fund">
-                                <p>{{ $toMoney($fromWei(ad.balance)) }} <span>$TRP</span></p>
+                                <p>{{ $toMoney($fromWei(ad.balance) - $fromWei(extAd.spent)) }} <span>$TRP</span></p>
                                 <PrimaryButton :text="'Fund'" v-on:click="fundAd()"
                                     v-if="Number($fromWei(allowance)) >= 100" :progress="funding" :width="'100px'" />
                                 <PrimaryButton v-on:click="approve()" :progress="approving" v-else
@@ -43,10 +46,10 @@
 
                         <div class="stats">
                             <div class="stat">
-                                <p><span>Views:</span> 0</p>
+                                <p><span>Views:</span> {{ extAd.views }}</p>
                             </div>
                             <div class="stat">
-                                <p><span>Clicks:</span> 0</p>
+                                <p><span>Clicks:</span> {{ extAd.clicks }}</p>
                             </div>
                         </div>
                     </div>
@@ -174,11 +177,14 @@ import TurpleCoreAPI from '../../../scripts/TurpleCoreAPI'
 import SubGraphAPI from '../../../scripts/SubGraphAPI'
 // import IconVideoCircle from '../../icons/IconVideoCircle.vue'
 import VideoPlayer from '../../VideoPlayer.vue'
+import axios from 'axios'
+import ProgressBox from '../../ProgressBox.vue'
 export default {
     props: ['userAddress'],
     data() {
         return {
             ad: null,
+            extAd: null,
             resuming: false,
             funding: false,
             publishing: false,
@@ -195,6 +201,7 @@ export default {
     },
     mounted() {
         this.getAd()
+        this.tryInitAd()
         this.getAdStatus()
         this.getAllowance()
     },
@@ -213,7 +220,6 @@ export default {
 
         getAdStatus: async function () {
             this.adStatus = await TurpleCoreAPI.proposalState(this.$route.params.id)
-            console.log(this.adStatus);
         },
 
         approve: async function () {
@@ -315,13 +321,34 @@ export default {
             }
 
             this.publishing = false
+        },
+
+        tryInitAd: function () {
+            axios.post(`https://turple-api-v1.onrender.com/ad/create?adid=${this.$route.params.id}`)
+            this.tryGetAd()
+        },
+
+        tryGetAd: function () {
+            axios.get(`https://turple-api-v1.onrender.com/ad/${this.$route.params.id}`)
+                .then(response => {
+                    this.extAd = response.data.data
+                })
         }
     },
-    components: { VideoPlayer }
+    components: { VideoPlayer, ProgressBox }
 }
 </script>
 
 <style scoped>
+
+.progress {
+    transition: .2s;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 section {
     min-height: 960px;
     background: url('/images/hero_bg.svg');

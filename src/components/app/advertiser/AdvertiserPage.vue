@@ -45,18 +45,17 @@
                             </div>
                             <div class="details2">
                                 <div>
-                                    <p>Votes</p>
-                                    <p>{{ video.approves.length + video.disapproves.length }}</p>
+                                    <p>Format</p>
+                                    <p>{{ formats[video.format] }}</p>
                                 </div>
                                 <div>
-                                    <p>Balance</p>
-                                    <div class="token">
-                                        <img src="/images/icon.png" alt="">
-                                        <p>{{ $toMoney($fromWei(video.balance)) }} TRP</p>
-                                    </div>
+                                    <p>Category</p>
+                                    <!-- <div class="token"> -->
+                                    <p>{{ categories[video.category] }}</p>
+                                    <!-- </div> -->
                                 </div>
                             </div>
-                            <RouterLink  :to="`/app/advertiser/ads/${video.id}`">
+                            <RouterLink :to="`/app/advertiser/ads/${video.id}`">
                                 <div class="vote">
                                     <PrimaryButton :text="'Manage'" />
                                 </div>
@@ -90,7 +89,18 @@ export default {
     data() {
         return {
             videos: [],
-            votes: [],
+            formats: [
+                'Full on-mobile',
+                'Website Video Ads',
+                'Rewarded Ads'
+            ],
+            categories: [
+                'Metaverse and Gaming',
+                'DeFi, DAOs and AMMs',
+                'Artistry, NFTs, and Marketplaces',
+                'ICO, IDO, INO, IGO and others',
+                'Fashion Industry'
+            ],
             advertiser: null,
             fetching: false
         };
@@ -278,6 +288,14 @@ export default {
 .campaign .details2 p:first-child {
     font-size: 12px;
     margin-bottom: 10px;
+}
+
+.campaign .details2 p:last-child {
+    text-align: center;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .campaign .details2>div {
