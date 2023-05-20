@@ -11,7 +11,7 @@
                         <div class="links">
                             <RouterLink to="/app/faucet">Turple Token</RouterLink>
                             <RouterLink to="/app/validator">Become A Validator</RouterLink>
-                            <a href="" target="_blank">Docs</a>
+                            <RouterLink to="/app/simulator">Ad Simulator</RouterLink>
                             <a href="/#pricing">Pricing</a>
                             <a href="/#sdk">SDK</a>
                         </div>

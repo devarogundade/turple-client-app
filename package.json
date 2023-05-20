@@ -20,6 +20,7 @@
     "ethereumjs-units": "^0.2.0",
     "ethers": "^5.7.2",
     "hls.js": "^0.12.4",
+    "videojs-contrib-ads": "^7.3.0",
     "vue": "^3.2.47",
     "vue-axios": "^3.5.2",
     "vue-router": "^4.1.6",

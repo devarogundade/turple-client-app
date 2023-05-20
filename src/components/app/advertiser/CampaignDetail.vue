@@ -34,9 +34,8 @@
                 <div class="form_parent">
                     <div class="toolbar">
                         <div class="balance">
-                            <h3>Balance</h3>
                             <div class="fund">
-                                <p>{{ $toMoney($fromWei(ad.balance) - $fromWei(extAd.spent)) }} <span>$TRP</span></p>
+                                <p>{{ $toMoney($fromWei(ad.balance) - (extAd.spent)) }} <span>$TRP</span></p>
                                 <PrimaryButton :text="'Fund'" v-on:click="fundAd()"
                                     v-if="Number($fromWei(allowance)) >= 100" :progress="funding" :width="'100px'" />
                                 <PrimaryButton v-on:click="approve()" :progress="approving" v-else
@@ -324,12 +323,12 @@ export default {
         },
 
         tryInitAd: function () {
-            axios.post(`https://turple-api-v1.onrender.com/ad/create?adid=${this.$route.params.id}`)
+            axios.post(`http://localhost:8080/ad/create?adid=${this.$route.params.id}`)
             this.tryGetAd()
         },
 
         tryGetAd: function () {
-            axios.get(`https://turple-api-v1.onrender.com/ad/${this.$route.params.id}`)
+            axios.get(`http://localhost:8080/ad/${this.$route.params.id}`)
                 .then(response => {
                     this.extAd = response.data.data
                 })

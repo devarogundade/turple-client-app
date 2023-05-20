@@ -81,11 +81,11 @@ export default {
             this.app = await SubGraphAPI.ad(this.$route.params.id);
         },
         tryInitApp: function () {
-            axios.post(`https://turple-api-v1.onrender.com/app/create?appid=${this.$route.params.id}`);
+            axios.post(`http://localhost:8080/app/create?appid=${this.$route.params.id}`);
             this.tryGetApp();
         },
         tryGetApp: function () {
-            axios.get(`https://turple-api-v1.onrender.com/app/${this.$route.params.id}`)
+            axios.get(`http://localhost:8080/app/${this.$route.params.id}`)
                 .then(response => {
                 this.extApp = response.data.data;
             });

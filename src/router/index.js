@@ -15,6 +15,7 @@ import MonetizeCreation from '../components/app/publisher/MonetizeCreation.vue'
 import PublishCampaign from '../components/app/publisher/PublishCampaign.vue'
 import CampaignDetail from '../components/app/advertiser/CampaignDetail.vue'
 import FaucetPage from '../components/app/FaucetPage.vue'
+import AdSimulator from '../components/app/AdSimulator.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,6 +46,11 @@ const router = createRouter({
           path: '/app/faucet',
           name: 'app-faucet',
           component: FaucetPage
+        },
+        {
+          path: '/app/simulator',
+          name: 'app-simulator',
+          component: AdSimulator
         },
         {
           path: '/app/validator',
