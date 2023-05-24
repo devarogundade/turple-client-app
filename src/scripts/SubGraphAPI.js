@@ -125,6 +125,32 @@ const SubGraphAPI = {
         }
     },
 
+    app: async function (id) {
+        try {
+            const response = await axios.post(this.BASE_URL,
+                {
+                    query: `{
+                        appCreated (id: "${id}") {
+                            id
+                            appId
+                            format
+                            category
+                            claimedReward
+                            metadata
+                            publisher
+                            createdOn
+                            claimedReward
+                        }
+                    }`
+                }
+            )
+            return response.data.data.appCreated
+        } catch (error) {
+            console.error(error);
+            return null
+        }
+    },
+
     hasApprove: async function (adId, userAddress) {
         try {
             const response = await axios.post(this.BASE_URL,

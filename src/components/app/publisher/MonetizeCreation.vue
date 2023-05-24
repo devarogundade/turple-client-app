@@ -18,7 +18,7 @@
                     </div>
                     <div class="panel">
                         <IconCost />
-                        <h3>{{ $toMoney($fromWei(app.balance) - $fromWei(extApp.earned)) }} <span>TRP</span></h3>
+                        <h3>{{ $toMoney($fromWei(app.claimedReward) - $fromWei(extApp.earned)) }} <span>TRP</span></h3>
                         <p>Unclaimed Earnings</p>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
 
                     <div class="steps">
                         <div class="step">npm install @turple/vue</div>
-                        <div class="step">> .env <br> PUB_ID=pubid_{{ $route.params.id }}</div>
+                        <div class="step">> .env <br> PUB_ID=subid_{{ $route.params.id }}</div>
                         <div class="step">> main.js <br> import Adview from '@turple/vue' <br> app.use(Adview)</div>
                     </div>
 
@@ -78,10 +78,10 @@ export default {
     },
     methods: {
         getApp: async function () {
-            this.app = await SubGraphAPI.ad(this.$route.params.id);
+            this.app = await SubGraphAPI.app(this.$route.params.id);
+            console.log(this.app);
         },
         tryInitApp: function () {
-            axios.post(`http://localhost:8080/app/create?appid=${this.$route.params.id}`);
             this.tryGetApp();
         },
         tryGetApp: function () {

@@ -3,7 +3,7 @@
         <div class="page_width">
             <form>
                 <input type="text" placeholder="Enter your Sub ID here">
-                <PrimaryButton :text="'Load Ad'" />
+                <PrimaryButton :text="'Load Ad'" /> 
             </form>
             <br> <br>
             <div class="video">
