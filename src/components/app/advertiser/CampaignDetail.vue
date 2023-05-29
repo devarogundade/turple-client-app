@@ -1,5 +1,5 @@
 <template>
-    <div class="progress" v-if="!ad || !extAd" >
+    <div class="progress" v-if="!ad || !extAd">
         <ProgressBox />
     </div>
     <section v-else>
@@ -25,7 +25,7 @@
                                 :width="'200px'" :text="'Propose'" />
                             <PrimaryButton v-if="ad.state == 1 && adStatus == 0" :state="'disable'" :width="'200px'"
                                 :text="'Wait for validators'" />
-                            <PrimaryButton v-if="ad.state == 1 && adStatus == 1" v-on:click="publishAd()"
+                            <PrimaryButton v-if="ad.state == 1 && adStatus == 2" v-on:click="publishAd()"
                                 :progress="publishing" :width="'200px'" :text="'Publish'" />
                         </div>
                     </div>
@@ -52,6 +52,21 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="chart">
+                        <div class="chart_box">
+                            <div class="chart_grid">
+                                <div class="chart_box_row" v-for="index in 6" :key="index"></div>
+                            </div>
+                            <div class="chart_grid_2">
+                                <div class="chart_box_column" v-for="index in 12" :key="index"></div>
+                            </div>
+                            <div id="chart"></div>
+                        </div>
+                    </div>
+
+                    <br> <br>
+
                     <div class="form">
                         <div class="input">
                             <label for="">Campaign format</label>
@@ -79,7 +94,7 @@
                         <div class="input">
                             <label for="">Campaign video</label>
                             <div class="upload_video" v-on:click="pickFile()">
-                                <VideoPlayer :options="{
+                                <VideoPlayer :height="'500px'" :options="{
                                     autoplay: false,
                                     controls: true,
                                     sources: [{
@@ -170,6 +185,7 @@ import IconBlockchain from '../../icons/IconBlockchain.vue'
 
 <script>
 // import FileUtils from '../../../scripts/FileUtils'
+import ApexCharts from 'apexcharts'
 import config from '../../../assets/config.json'
 import { messages } from '../../reactives/messages'
 import TurpleCoreAPI from '../../../scripts/TurpleCoreAPI'
@@ -190,7 +206,8 @@ export default {
             proposing: false,
             approving: false,
             allowance: '0',
-            adStatus: 0
+            adStatus: 0,
+            chart: null
         };
     },
     watch: {
@@ -205,6 +222,98 @@ export default {
         this.getAllowance()
     },
     methods: {
+        renderChart: function () {
+            var options = {
+                stroke: {
+                    curve: "smooth",
+                    width: 2,
+                    colors: ["#6936F5"]
+                },
+                grid: {
+                    xaxis: {
+                        lines: {
+                            show: false
+                        }
+                    },
+                    yaxis: {
+                        lines: {
+                            show: false
+                        }
+                    },
+                    padding: {
+                        top: -28,
+                        right: 0,
+                        bottom: 0,
+                        left: -9
+                    }
+                },
+                chart: {
+                    type: "area",
+                    toolbar: { show: false },
+                    height: 205,
+                    width: "100%",
+                    zoom: { enabled: false }
+                },
+                tooltip: {
+                    x: { show: false },
+                    marker: { show: false },
+                    style: {
+                        fontSize: "12px",
+                        fontFamily: "Axiforma"
+                    }
+                },
+                markers: {
+                    strokeColors: "#6936F5",
+                    colors: ["#EEF1F8"],
+                    strokeWidth: 4,
+                    radius: 2
+                },
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        type: "vertical",
+                        gradientToColors: ["#6936F5", "#6936F5"],
+                        inverseColors: true,
+                        opacityFrom: 0.5,
+                        opacityTo: 0.05
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                series: [{
+                    name: "Impressions",
+                    data: [34, 35, 31, 38, 40, 35, 42, 38, 34, 38, 80, 32],
+                }, {
+                    name: "Views",
+                    data: [10, 25, 15, 12, 10, 7, 4, 13, 4, 13, 10, 12],
+                }],
+                xaxis: {
+                    categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                    labels: { show: false },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false },
+                    tooltip: {
+                        style: {
+                            fontSize: "12px",
+                            fontFamily: "Poppins"
+                        }
+                    }
+                },
+                yaxis: {
+                    labels: { show: false },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false },
+                },
+                legend: { show: false }
+            };
+            let dom = document.querySelector("#chart")
+            if (dom && !this.chart) {
+                this.chart = new ApexCharts(dom, options);
+                this.chart.render();
+            }
+        },
+
         getAllowance: async function () {
             if (this.userAddress) {
                 const amount = await this.$allowanceOf(
@@ -219,6 +328,7 @@ export default {
 
         getAdStatus: async function () {
             this.adStatus = await TurpleCoreAPI.proposalState(this.$route.params.id)
+            console.log(this.adStatus);
         },
 
         approve: async function () {
@@ -277,8 +387,8 @@ export default {
 
             if (trx && trx.transactionHash) {
                 messages.insertMessage({
-                    title: "Ad campaign has been proposed",
-                    description: "Your ad will be approve or disapproved by validators",
+                    title: "Ad campaign has been funded",
+                    description: "Your ad balance will be increased.",
                     type: "success",
                     linkTitle: "View Trx",
                     linkUrl: `https://testnet-explorer.thetatoken.org/txs/${trx.transactionHash}`
@@ -334,12 +444,15 @@ export default {
                 })
         }
     },
+
+    updated() {
+        this.renderChart()
+    },
     components: { VideoPlayer, ProgressBox }
 }
 </script>
 
 <style scoped>
-
 .progress {
     transition: .2s;
     height: 100vh;
@@ -535,11 +648,13 @@ main {
 .upload_video {
     margin-top: 10px;
     width: 100%;
-    background-color: #F5F5F5;
+    /* background-color: #F5F5F5; */
     text-align: center;
     border-radius: 10px;
-    border: 1px #e4e4e4 solid;
+    /* border: 1px #e4e4e4 solid; */
     display: flex;
+    border-radius: 4px;
+    overflow: hidden;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -599,4 +714,47 @@ main {
 .terms p a {
     text-decoration: underline 1px var(--primary);
 }
+
+
+
+.chart {
+    width: 850px;
+    background: var(--bglight);
+    border-radius: 6px;
+    padding: 30px;
+}
+
+.chart_box {
+    margin-top: 30px;
+    position: relative;
+    height: 190px;
+}
+
+.chart_grid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.chart_box_row {
+    height: 1px;
+    background: #e4e4e4;
+}
+
+.chart_grid_2 {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    position: absolute;
+    justify-content: space-between;
+}
+
+.chart_box_column {
+    width: 1px;
+    background: #e4e4e4;
+}
+
 </style>

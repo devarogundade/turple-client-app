@@ -11,7 +11,7 @@
                 </div>
                 <div class="text">
                     <h3>Join the validators node.</h3>
-                    <p>Stake 1500 $TRP to become a validator.</p>
+                    <p>Stake 10,500 $TRP to become a validator.</p>
                 </div>
                 <div class="actions">
                     <PrimaryButton v-on:click="joinNode()" :progress="joining" v-if="Number($fromWei(allowance)) >= 10500"

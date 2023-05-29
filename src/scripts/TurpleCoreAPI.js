@@ -112,6 +112,7 @@ const TurpleCoreAPI = {
     },
 
     proposalState: async function (adId) {
+        console.log(adId);
         try {
             return await readContract({
                 address: this.address,

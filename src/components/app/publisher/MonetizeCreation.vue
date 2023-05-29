@@ -38,7 +38,6 @@
                         <img src="/images/android.png" alt="">
                     </div>
 
-
                     <div class="steps">
                         <div class="step">npm install @turple/vue</div>
                         <div class="step">> .env <br> PUB_ID=subid_{{ $route.params.id }}</div>

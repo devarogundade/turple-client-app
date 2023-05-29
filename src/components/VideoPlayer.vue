@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" :style="height ? `height: ${height};` : 'height: 300px;'">
         <video ref="videoPlayer" class="video-js"></video>
     </div>
 </template>
@@ -11,6 +11,9 @@ import 'video.js/dist/video-js.css';
 export default {
     name: 'VideoPlayer',
     props: {
+        height: {
+            type: String
+        },
         options: {
             type: Object,
             default() {
@@ -39,7 +42,6 @@ export default {
 <style scoped>
 .container {
     width: 100%;
-    height: 300px;
 }
 
 .video-js {

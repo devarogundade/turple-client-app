@@ -62,7 +62,7 @@
                                     <p>$Reward</p>
                                     <div class="token">
                                         <img src="/images/icon.png" alt="">
-                                        <p>0.50 TRP</p>
+                                        <p>0.20 TRP</p>
                                     </div>
                                 </div>
                             </div>

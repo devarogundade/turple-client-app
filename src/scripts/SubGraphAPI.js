@@ -32,7 +32,7 @@ const SubGraphAPI = {
                         }
                     }` : `{
                         adCreateds(where: {
-                            advertiser: "${advertiser}", state: ${state}
+                           state: ${state}
                         }, orderBy: blockNumber) {
                             id
                             adId

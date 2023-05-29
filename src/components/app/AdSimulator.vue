@@ -2,12 +2,12 @@
     <section>
         <div class="page_width">
             <form>
-                <input type="text" placeholder="Enter your Sub ID here">
-                <PrimaryButton :text="'Load Ad'" /> 
+                <input type="text" v-model="subid" placeholder="Enter your Sub ID here">
+                <PrimaryButton :text="'Load Ad'" v-on:click="loadAd = true" />
             </form>
             <br> <br>
             <div class="video">
-                <AdView :subid="'subid_4'"
+                <AdView v-if="loadAd" :subid="subid"
                     :src="'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'" />
             </div>
             <br> <br>
@@ -36,6 +36,17 @@ import AdView from '../../../../sdks/vue/AdView.vue';
 import PrimaryButton from '../PrimaryButton.vue';
 </script>
 
+<script>
+export default {
+    data() {
+        return {
+            subid: '',
+            loadAd: false
+        }
+    }
+}
+</script>
+
 <style scoped>
 section {
     padding: 120px 0;
@@ -57,4 +68,5 @@ form input {
 
 .page_width {
     width: 800px;
-}</style>
+}
+</style>
