@@ -18,8 +18,10 @@
                     </div>
                     <div class="panel">
                         <IconCost />
-                        <h3>{{ $toMoney($fromWei(app.claimedReward) - $fromWei(extApp.earned)) }} <span>TRP</span></h3>
+                        <h3>{{ $toMoney(extApp.earned - $fromWei(app.claimedReward)) }} <span>TRP</span></h3>
                         <p>Unclaimed Earnings</p>
+                        <PrimaryButton v-if="(extApp.earned - $fromWei(app.claimedReward)) > 0" :text="'Claim'"
+                            :progress="claiming" v-on:click="claim()" />
                     </div>
                 </div>
 
@@ -64,11 +66,14 @@ import PrimaryButton from '../../PrimaryButton.vue';
 import axios from 'axios';
 import SubGraphAPI from '../../../scripts/SubGraphAPI';
 import ProgressBox from '../../ProgressBox.vue';
+import TurpleCoreAPI from '../../../scripts/TurpleCoreAPI';
+import { messages } from '../../reactives/messages';
 export default {
     data() {
         return {
             app: null,
-            extApp: null
+            extApp: null,
+            claiming: false
         };
     },
     mounted() {
@@ -81,13 +86,44 @@ export default {
             console.log(this.app);
         },
         tryInitApp: function () {
+            axios.post(`http://localhost:8080/app/create?appid=${this.$route.params.id}`)
             this.tryGetApp();
         },
         tryGetApp: function () {
             axios.get(`http://localhost:8080/app/${this.$route.params.id}`)
                 .then(response => {
-                this.extApp = response.data.data;
-            });
+                    this.extApp = response.data.data;
+                });
+        },
+        claim: async function () {
+            if (this.claiming) return
+
+            this.claiming = true
+
+            const trx = await TurpleCoreAPI.claimAppReward(this.$route.params.id, this.$toWei(
+                this.extApp.earned - this.$fromWei(this.app.claimedReward)
+            ))
+
+            if (trx && trx.transactionHash) {
+                messages.insertMessage({
+                    title: 'Earningd has been claimed',
+                    description: 'You\'ve successfully claim your earnings',
+                    type: 'success',
+                    linkTitle: 'View Trx',
+                    linkUrl: `https://testnet-explorer.thetatoken.org/txs/${trx.transactionHash}`
+                })
+            } else {
+                messages.insertMessage({
+                    title: 'Failed to claim earnings',
+                    description: 'Please try transaction again',
+                    type: 'failed'
+                })
+            }
+
+            this.claiming = false
+            
+            this.getApp()
+            this.tryGetApp()
         }
     },
     components: { ProgressBox }
@@ -95,7 +131,6 @@ export default {
 </script>
 
 <style scoped>
-
 .progress {
     transition: .2s;
     height: 100vh;
@@ -103,6 +138,7 @@ export default {
     align-items: center;
     justify-content: center;
 }
+
 .validator {
     padding: 120px 0;
 }
