@@ -25,7 +25,7 @@
                                 :width="'200px'" :text="'Propose'" />
                             <PrimaryButton v-if="ad.state == 1 && adStatus == 0" :state="'disable'" :width="'200px'"
                                 :text="'Wait for validators'" />
-                            <PrimaryButton v-if="ad.state == 1 && adStatus == 2" v-on:click="publishAd()"
+                            <PrimaryButton v-if="ad.state == 1 && adStatus == 1" v-on:click="publishAd()"
                                 :progress="publishing" :width="'200px'" :text="'Publish'" />
                         </div>
                     </div>

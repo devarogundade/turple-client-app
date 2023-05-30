@@ -27,7 +27,7 @@
                         <div class="app">
                             <div class="detail">
                                 <h3 class="name">{{ JSON.parse(app.metadata).name }}</h3>
-                                <p class="id">pubid_{{ app.appId }}</p>
+                                <p class="id">subid_{{ app.appId }}</p>
                             </div>
                             <IconArrowRight />
                         </div>

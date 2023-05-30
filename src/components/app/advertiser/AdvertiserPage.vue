@@ -8,13 +8,13 @@
                 <div class="panels">
                     <div class="panel">
                         <IconGalleryTick />
-                        <h3>1,943,432</h3>
+                        <h3>{{ videos.length }}</h3>
                         <p>My Campaigns</p>
                     </div>
                     <div class="panel">
-                        <IconCost />
-                        <h3>1.523 <span>TRP</span></h3>
-                        <p>Total Balance</p>
+                        <IconGalleryTick />
+                        <h3>{{ videos.filter(v => v.state == 2).length }} <span></span></h3>
+                        <p>Published</p>
                     </div>
                 </div>
 
@@ -74,7 +74,7 @@
 </template>
 
 <script setup>
-import IconCost from '../../icons/IconCost.vue';
+// import IconCost from '../../icons/IconCost.vue';
 import IconGalleryTick from '../../icons/IconGalleryTick.vue'
 import PrimaryButton from '../../PrimaryButton.vue';
 // import IconVideoCircle from '../../icons/IconVideoCircle.vue';
@@ -122,7 +122,7 @@ export default {
             }
         }
     },
-    components: { IconCost, ProgressBox, PrimaryButton }
+    components: { ProgressBox, PrimaryButton }
 }
 </script>
 
