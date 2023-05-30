@@ -5,14 +5,14 @@
                 <div class="panels">
                     <div class="panel">
                         <IconStake />
-                        <h3>1,500 <span>TRP</span></h3>
-                        <p>Total Earnings</p>
+                        <h3>{{ apps.length }}</h3>
+                        <p>Apps</p>
                     </div>
-                    <div class="panel">
+                    <!-- <div class="panel">
                         <IconCost />
                         <h3>1.523 <span>TRP</span></h3>
                         <p>Unclaimed Earnings</p>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="toolbar">
@@ -45,7 +45,7 @@
 
 <script setup>
 import IconArrowRight from '../../icons/IconArrowRight.vue';
-import IconCost from '../../icons/IconCost.vue';
+// import IconCost from '../../icons/IconCost.vue';
 import IconStake from '../../icons/IconStake.vue'
 import PrimaryButton from '../../PrimaryButton.vue';
 </script>
@@ -96,7 +96,7 @@ export default {
 }
 
 .validator .panel {
-    width: 50%;
+    width: 100%;
     height: 240px;
     display: flex;
     flex-direction: column;

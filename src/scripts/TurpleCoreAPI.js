@@ -234,6 +234,23 @@ const TurpleCoreAPI = {
         }
     },
 
+    claimValidatorReward: async function () {
+        try {
+            const config = await prepareWriteContract({
+                address: this.address,
+                abi: TurpleCoreABI.abi,
+                functionName: 'claimValidatorReward'
+            })
+
+            const { hash } = await writeContract(config)
+
+            return await waitForTransaction({ hash: hash })
+        } catch (error) {
+            console.error(error);
+            return null
+        }
+    },
+
     exitValidator: async function () {
         try {
             const config = await prepareWriteContract({

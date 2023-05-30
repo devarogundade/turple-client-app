@@ -18,6 +18,11 @@
                     </div>
                     <div class="panel">
                         <IconCost />
+                        <h3>{{ $toMoney($fromWei(app.claimedReward)) }}</h3>
+                        <p>Total Claimed</p>
+                    </div>
+                    <div class="panel">
+                        <IconCost />
                         <h3>{{ $toMoney(extApp.earned - $fromWei(app.claimedReward)) }} <span>TRP</span></h3>
                         <p>Unclaimed Earnings</p>
                         <PrimaryButton v-if="(extApp.earned - $fromWei(app.claimedReward)) > 0" :text="'Claim'"
@@ -106,7 +111,7 @@ export default {
 
             if (trx && trx.transactionHash) {
                 messages.insertMessage({
-                    title: 'Earningd has been claimed',
+                    title: 'Earnings has been claimed',
                     description: 'You\'ve successfully claim your earnings',
                     type: 'success',
                     linkTitle: 'View Trx',
@@ -121,7 +126,7 @@ export default {
             }
 
             this.claiming = false
-            
+
             this.getApp()
             this.tryGetApp()
         }
@@ -154,7 +159,7 @@ export default {
 }
 
 .validator .panel {
-    width: 432px;
+    width: 25%;
     height: 240px;
     display: flex;
     flex-direction: column;

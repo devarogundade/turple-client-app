@@ -25,6 +25,8 @@
                         <IconCost />
                         <h3>{{ $toMoney($fromWei(validator.unClaimedReward)) }} <span>TRP</span></h3>
                         <p>UnClaimed Earnings</p>
+                        <PrimaryButton v-if="(validator.unClaimedReward) > 0" :text="'Claim'" :progress="claiming"
+                            v-on:click="claim()" />
                     </div>
                 </div>
 
@@ -37,43 +39,50 @@
                 </div>
 
                 <div class="campaigns">
-                        <div class="campaign"  v-for="video, i in videos" :key="i" >
-                            <div class="video_box">
-                                <VideoPlayer :options="{
-                                    autoplay: false,
-                                    controls: true,
-                                    sources: [{
-                                        src: `https://media.thetavideoapi.com/${JSON.parse(video.metadata).videoId}/master.m3u8`,
-                                        type: 'application/x-mpegurl'
-                                    }]
-                                }" />
-                                <!-- <IconVideoCircle class="play_btn" /> -->
-                            </div>          
-                            <div class="details">
-                                <h3 class="title">{{ JSON.parse(video.metadata).name }}</h3>
-                                <p class="description">{{ JSON.parse(video.metadata).description }}</p>
+                    <div class="campaign" v-for="video, i in videos" :key="i">
+                        <div class="video_box">
+                            <VideoPlayer :options="{
+                                autoplay: false,
+                                controls: true,
+                                sources: [{
+                                    src: `https://media.thetavideoapi.com/${JSON.parse(video.metadata).videoId}/master.m3u8`,
+                                    type: 'application/x-mpegurl'
+                                }]
+                            }" />
+                            <!-- <IconVideoCircle class="play_btn" /> -->
+                        </div>
+                        <div class="details">
+                            <h3 class="title">{{ JSON.parse(video.metadata).name }}</h3>
+                            <p class="description">{{ JSON.parse(video.metadata).description }}</p>
+                        </div>
+                        <div class="details2">
+                            <div>
+                                <p>Votes</p>
+                                <p>{{ video.approves.length + video.disapproves.length }}</p>
                             </div>
-                            <div class="details2">
-                                <div>
-                                    <p>Votes</p>
-                                    <p>{{ video.approves.length + video.disapproves.length }}</p>
+                            <div>
+                                <p>$Reward</p>
+                                <div class="token">
+                                    <img src="/images/icon.png" alt="">
+                                    <p>0.20 TRP</p>
                                 </div>
-                                <div>
-                                    <p>$Reward</p>
-                                    <div class="token">
-                                        <img src="/images/icon.png" alt="">
-                                        <p>0.20 TRP</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="vote" v-if="canVote(video)">
-                                <PrimaryButton v-on:click="voteUp(video.adId)" :progress="votingUp == video.adId" :text="'Up vote'" />
-                                <PrimaryButton v-on:click="voteDown(video.adId)" :progress="votingDown == video.adId" :text="'Down vote'" />
-                            </div>
-                            <div class="vote2" v-else>
-                                <PrimaryButton :state="'disable'" :text="'Voted'" />
                             </div>
                         </div>
+                        <div class="vote" v-if="canVote(video)">
+                            <PrimaryButton v-on:click="voteUp(video.adId)" :progress="votingUp == video.adId"
+                                :text="'Up vote'" />
+                            <PrimaryButton v-on:click="voteDown(video.adId)" :progress="votingDown == video.adId"
+                                :text="'Down vote'" />
+                        </div>
+                        <div class="vote2" v-else>
+                            <PrimaryButton :state="'disable'" :text="'Voted'" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="t_empty" v-if="videos.length == 0">
+                    <img src="/images/empty.png" alt="">
+                    <p>No campaigns found.</p>
                 </div>
             </div>
         </div>
@@ -104,7 +113,8 @@ export default {
             validator: null,
             fetching: true,
             votingUp: -1,
-            votingDown: -1
+            votingDown: -1,
+            claiming: false
         };
     },
     watch: {
@@ -130,7 +140,7 @@ export default {
             if (this.userAddress) {
                 this.fetching = true
                 this.validator = await TurpleCoreAPI.validator(this.userAddress)
-     
+
                 if (this.validator && Number(this.validator.createdOn) == 0) {
                     this.$router.push('/app/validator/join')
                 }
@@ -143,18 +153,18 @@ export default {
             for (let index = 0; index < ad.approves.length; index++) {
                 if (ad.approves[index].validator.toLowerCase() == this.userAddress.toLowerCase()) {
                     return false
-                }               
+                }
             }
 
             for (let index = 0; index < ad.disapproves.length; index++) {
                 if (ad.disapproves[index].validator.toLowerCase() == this.userAddress.toLowerCase()) {
                     return false
-                }               
+                }
             }
 
             return true
         },
-        
+
         voteUp: async function (adId) {
             if (this.votingUp > 0) return
 
@@ -211,6 +221,34 @@ export default {
             this.getValidatorProfile()
 
             this.votingDown = -1
+        },
+
+        claim: async function () {
+            if (this.claiming) return
+
+            this.claiming = true
+
+            const trx = await TurpleCoreAPI.claimValidatorReward()
+
+            if (trx && trx.transactionHash) {
+                messages.insertMessage({
+                    title: 'Earnings has been claimed',
+                    description: 'You\'ve successfully claim your earnings',
+                    type: 'success',
+                    linkTitle: 'View Trx',
+                    linkUrl: `https://testnet-explorer.thetatoken.org/txs/${trx.transactionHash}`
+                })
+            } else {
+                messages.insertMessage({
+                    title: 'Failed to claim earnings',
+                    description: 'Please try transaction again',
+                    type: 'failed'
+                })
+            }
+
+            this.claiming = false
+
+            this.getValidatorProfile()
         }
     },
     components: { IconCost, ProgressBox }
