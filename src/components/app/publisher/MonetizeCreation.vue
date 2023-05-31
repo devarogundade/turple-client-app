@@ -46,7 +46,7 @@
                     </div>
 
                     <div class="steps">
-                        <div class="step">npm install @turple/vue</div>
+                        <div class="step">npm i turple-vue-sdk</div>
                         <div class="step">> .env <br> PUB_ID=subid_{{ $route.params.id }}</div>
                         <div class="step">> main.js <br> import Adview from '@turple/vue' <br> app.use(Adview)</div>
                     </div>
